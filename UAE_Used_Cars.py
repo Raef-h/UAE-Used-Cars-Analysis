@@ -12,14 +12,22 @@ try:
     fig, axs = plt.subplots(2, 2, figsize=(12, 12)) 
 
     # ................................................................1 - Histogram (Price Distribution)
-    city_car_count = df['Location'].value_counts().sort_values(ascending=False)
-    axs[0, 0].barh(city_car_count.index, city_car_count.values, color=sns.color_palette("pastel")[0])
-    axs[0, 0].set_title('Number of Cars in Each City', fontsize=10)
-    axs[0, 0].set_xlabel('Number of Cars', fontsize=8)
-    axs[0, 0].set_ylabel('City', fontsize=8)
-    for i, v in enumerate(city_car_count.values):
-        axs[0, 0].text(v + 5, i, str(v), va='center', fontsize=6.5, color='red')
-    axs[0, 0].invert_yaxis()
+city_car_count = df['Location'].value_counts().sort_values(ascending=False)
+
+axs[0, 0].barh(
+    city_car_count.index,
+    city_car_count.values,
+    color = ['#C8102E', '#007A33', '#000000'] * (len(city_car_count) // 3 + 1)
+)
+
+axs[0, 0].set_title('Number of Cars in Each City', fontsize=10)
+axs[0, 0].set_xlabel('Number of Cars', fontsize=8)
+axs[0, 0].set_ylabel('City', fontsize=8)
+
+for i, v in enumerate(city_car_count.values):
+    axs[0, 0].text(v + 5, i, str(v), va='center', fontsize=6.5, color="#000000FF")
+
+axs[0, 0].invert_yaxis()
 
     # ................................................................2 - Pie Chart (Fuel Type Distribution)
     labels_order = ['Electric', 'Diesel', 'Hybrid', 'Gasoline']
