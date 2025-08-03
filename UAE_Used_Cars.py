@@ -1,3 +1,4 @@
+import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -10,7 +11,7 @@ file_path = "UAE Used Cars Analysis.CSV"
 
 # التحقق من وجود الملف
 if not os.path.exists(file_path):
-    print(f"الملف {file_path} غير موجود! تأكد من المسار.")
+    st.error(f"الملف {file_path} غير موجود! تأكد من المسار.")
 else:
     # قراءة البيانات
     df = pd.read_csv(file_path)
@@ -66,7 +67,9 @@ else:
 
     # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
     plt.tight_layout()
-    plt.show()
+
+    # عرض الرسم البياني باستخدام Streamlit
+    st.pyplot(fig)
 
     # -------------------------- Second Figure (3x1 Grid for 3 additional plots)
 
@@ -112,7 +115,9 @@ else:
 
     # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
     plt.tight_layout()
-    plt.show()
+
+    # عرض الرسم البياني باستخدام Streamlit
+    st.pyplot(fig)
 
     # إنشاء الشكل مع تحديد عدد الصفوف والأعمدة (1 صف و 2 عمود)
     fig, axs = plt.subplots(1, 2, figsize=(16, 8))
@@ -195,5 +200,5 @@ else:
     # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
     plt.tight_layout()
 
-    # عرض الرسم البياني
-    plt.show()
+    # عرض الرسم البياني باستخدام Streamlit
+    st.pyplot(fig)
