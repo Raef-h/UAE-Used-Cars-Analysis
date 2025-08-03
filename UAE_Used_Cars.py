@@ -6,15 +6,7 @@ import seaborn as sns
 from sklearn.linear_model import LinearRegression
 
 # رفع الملف من واجهة المستخدم
-uploaded_file = st.file_uploader("اختر ملف CSV", type="csv")
-
-# التأكد من رفع الملف
-if uploaded_file is not None:
-    # قراءة البيانات من الملف
-    try:
-        df = pd.read_csv(uploaded_file)
-        st.write(df.head())  # عرض أول 5 صفوف من البيانات للتأكد من أنها تم تحميلها بشكل صحيح
-
+df = pd.read_csv("UAE Used Cars Analysis.CSV")
         # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
         fig, axs = plt.subplots(2, 2, figsize=(8, 8))  # 2 صفوف و 2 أعمدة (أربعة subplots)
 
