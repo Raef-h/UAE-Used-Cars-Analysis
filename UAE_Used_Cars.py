@@ -57,13 +57,21 @@ try:
     highest_price_by_make = df.groupby('Make')['Price'].max().sort_values(ascending=False)
     top_10_highest_price = highest_price_by_make.head(10)
     formatted_prices = top_10_highest_price.apply(lambda x: f'{x/1_000_000:.2f}M' if x >= 1_000_000 else str(x))
-    axs[1, 1].bar(formatted_prices.index, top_10_highest_price.values, color=sns.color_palette("pastel")[2])
+    colors = ["#D4AF37", '#C0C0C0', '#C47E55'] + ['#708090'] * 7
+
+    axs[1, 1].bar(
+        formatted_prices.index,
+        top_10_highest_price.values,
+        color=colors
+    )
+
     axs[1, 1].set_title('Top 10 Car Makes by Highest Car Price', fontsize=10)
     axs[1, 1].set_xlabel('Car Make', fontsize=8)
     axs[1, 1].set_ylabel('Highest Car Price (AED)', fontsize=8)
     axs[1, 1].tick_params(axis='x', rotation=45)
+
     for i, v in enumerate(top_10_highest_price.values):
-        axs[1, 1].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='red')
+        axs[1, 1].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='black')
 
     plt.tight_layout()
 
