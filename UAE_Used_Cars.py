@@ -67,7 +67,7 @@ try:
     # -------------------------- Second Figure (3x1 Grid for 3 additional plots)
 
     # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
-    fig, axs = plt.subplots(2, 2, figsize=(10, 10))  # 2 صفوف و 2 أعمدة
+    fig, axs = plt.subplots(2, 2, figsize=(12, 12))  # 2 صفوف و 2 أعمدة
 
     # ................................................................5 - Bar Chart (Top 10 Car Models by Highest Price)
     highest_price_by_model = df.groupby('Model')['Price'].max().sort_values(ascending=False)
