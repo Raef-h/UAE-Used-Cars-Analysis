@@ -138,7 +138,17 @@ try:
 
     # ................................................................8 - Line Plot (Top 9 Color Distribution by Total Number of Cars)
     color_count = df['Color'].value_counts().head(9)
-    axs[1, 1].plot(color_count.index, color_count.values, marker='o', color=sns.color_palette("pastel")[5], linestyle='-', linewidth=2)
+
+    axs[1, 1].plot(
+        color_count.index,
+        color_count.values,
+        marker='o',
+        color='#444444',
+        markerfacecolor='#B8860B',
+        linestyle='-',
+        linewidth=2
+    )
+
     axs[1, 1].set_title('Top 9 Color Distribution by Total Number of Cars', fontsize=10)
     axs[1, 1].set_xlabel('Color', fontsize=8)
     axs[1, 1].set_ylabel('Number of Cars', fontsize=8)
