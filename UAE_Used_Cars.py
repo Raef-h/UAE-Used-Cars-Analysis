@@ -6,7 +6,7 @@ import seaborn as sns
 from sklearn.linear_model import LinearRegression
 
 # رفع الملف من واجهة المستخدم
-df = pd.read_csv("UAE Used Cars Analysis.CSV")
+df = pd.read_csv("UAE Used Cars Analysis.csv")
         # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
         fig, axs = plt.subplots(2, 2, figsize=(8, 8))  # 2 صفوف و 2 أعمدة (أربعة subplots)
 
