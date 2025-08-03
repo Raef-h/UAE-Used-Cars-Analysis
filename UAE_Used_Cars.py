@@ -4,210 +4,204 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from sklearn.linear_model import LinearRegression
-import requests
-from io import StringIO
 
-# رفع رابط GitHub مباشرة
-github_file_url = st.text_input("أدخل رابط ملف CSV من GitHub", "https://raw.githubusercontent.com/username/repository/branch/filename.csv")
+# رفع الملف من واجهة المستخدم
+uploaded_file = st.file_uploader("اختر ملف CSV", type="csv")
 
-# التأكد من أن الرابط صالح
-if github_file_url:
+# التأكد من رفع الملف
+if uploaded_file is not None:
+    # قراءة البيانات من الملف
     try:
-        # تحميل الملف من GitHub
-        response = requests.get(github_file_url)
-        if response.status_code == 200:
-            # قراءة البيانات من الرابط باستخدام pandas
-            df = pd.read_csv(StringIO(response.text))
-            st.write(df.head())  # عرض أول 5 صفوف من البيانات للتأكد من أنها تم تحميلها بشكل صحيح
+        df = pd.read_csv(uploaded_file)
+        st.write(df.head())  # عرض أول 5 صفوف من البيانات للتأكد من أنها تم تحميلها بشكل صحيح
 
-            # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
-            fig, axs = plt.subplots(2, 2, figsize=(8, 8))  # 2 صفوف و 2 أعمدة (أربعة subplots)
+        # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
+        fig, axs = plt.subplots(2, 2, figsize=(8, 8))  # 2 صفوف و 2 أعمدة (أربعة subplots)
 
-            # ................................................................1 - Histogram (Price Distribution)
-            city_car_count = df['Location'].value_counts().sort_values(ascending=False)
-            axs[0, 0].barh(city_car_count.index, city_car_count.values, color=sns.color_palette("pastel")[0])
-            axs[0, 0].set_title('Number of Cars in Each City', fontsize=10)
-            axs[0, 0].set_xlabel('Number of Cars', fontsize=8)
-            axs[0, 0].set_ylabel('City', fontsize=8)
-            for i, v in enumerate(city_car_count.values):
-                axs[0, 0].text(v + 5, i, str(v), va='center', fontsize=6.5, color='red')
-            axs[0, 0].invert_yaxis()
+        # ................................................................1 - Histogram (Price Distribution)
+        city_car_count = df['Location'].value_counts().sort_values(ascending=False)
+        axs[0, 0].barh(city_car_count.index, city_car_count.values, color=sns.color_palette("pastel")[0])
+        axs[0, 0].set_title('Number of Cars in Each City', fontsize=10)
+        axs[0, 0].set_xlabel('Number of Cars', fontsize=8)
+        axs[0, 0].set_ylabel('City', fontsize=8)
+        for i, v in enumerate(city_car_count.values):
+            axs[0, 0].text(v + 5, i, str(v), va='center', fontsize=6.5, color='red')
+        axs[0, 0].invert_yaxis()
 
-            # ................................................................2 - Pie Chart (Fuel Type Distribution)
-            labels_order = ['Electric', 'Diesel', 'Hybrid', 'Gasoline']
-            fuel_type_ordered = df['Fuel Type'].value_counts()[labels_order]
-            explode_values = [0, 0, 0, 0]
-            fuel_colors = {
-                'Electric': '#00BFFF',  # الأزرق الفاتح للكهرباء
-                'Diesel': '#808080',    # الرمادي الداكن للديزل
-                'Hybrid': '#32CD32',    # الأخضر الفاتح للهجين
-                'Gasoline': '#FF6347'   # الأحمر للبنزين
-            }
-            custom_colors = [fuel_colors[label] for label in labels_order]
-            axs[0, 1].pie(fuel_type_ordered.values, labels=fuel_type_ordered.index, autopct='%1.1f%%', 
-                        startangle=170, colors=custom_colors, explode=explode_values)
-            axs[0, 1].set_title('Fuel Type Distribution', fontsize=10)
+        # ................................................................2 - Pie Chart (Fuel Type Distribution)
+        labels_order = ['Electric', 'Diesel', 'Hybrid', 'Gasoline']
+        fuel_type_ordered = df['Fuel Type'].value_counts()[labels_order]
+        explode_values = [0, 0, 0, 0]
+        fuel_colors = {
+            'Electric': '#00BFFF',  # الأزرق الفاتح للكهرباء
+            'Diesel': '#808080',    # الرمادي الداكن للديزل
+            'Hybrid': '#32CD32',    # الأخضر الفاتح للهجين
+            'Gasoline': '#FF6347'   # الأحمر للبنزين
+        }
+        custom_colors = [fuel_colors[label] for label in labels_order]
+        axs[0, 1].pie(fuel_type_ordered.values, labels=fuel_type_ordered.index, autopct='%1.1f%%', 
+                    startangle=170, colors=custom_colors, explode=explode_values)
+        axs[0, 1].set_title('Fuel Type Distribution', fontsize=10)
 
-            # ................................................................3 - Line Plot (Number of Cars by Year)
-            car_count_by_year = df['Year'].value_counts().sort_index()
-            axs[1, 0].plot(car_count_by_year.index, car_count_by_year.values, marker='o', color=sns.color_palette("pastel")[1], linestyle='-', linewidth=2)
-            axs[1, 0].set_title('Number of Cars by Year', fontsize=10)
-            axs[1, 0].set_xlabel('Year', fontsize=8)
-            axs[1, 0].set_ylabel('Number of Cars', fontsize=8)
-            axs[1, 0].grid(True)
-            axs[1, 0].set_xticks(range(2005, 2026, 2))
+        # ................................................................3 - Line Plot (Number of Cars by Year)
+        car_count_by_year = df['Year'].value_counts().sort_index()
+        axs[1, 0].plot(car_count_by_year.index, car_count_by_year.values, marker='o', color=sns.color_palette("pastel")[1], linestyle='-', linewidth=2)
+        axs[1, 0].set_title('Number of Cars by Year', fontsize=10)
+        axs[1, 0].set_xlabel('Year', fontsize=8)
+        axs[1, 0].set_ylabel('Number of Cars', fontsize=8)
+        axs[1, 0].grid(True)
+        axs[1, 0].set_xticks(range(2005, 2026, 2))
 
-            # ................................................................4 - Bar Chart (Top 10 Car Makes by Highest Price)
-            highest_price_by_make = df.groupby('Make')['Price'].max().sort_values(ascending=False)
-            top_10_highest_price = highest_price_by_make.head(10)
-            formatted_prices = top_10_highest_price.apply(lambda x: f'{x/1_000_000:.2f}M' if x >= 1_000_000 else str(x))
-            axs[1, 1].bar(formatted_prices.index, top_10_highest_price.values, color=sns.color_palette("pastel")[2])
-            axs[1, 1].set_title('Top 10 Car Makes by Highest Car Price', fontsize=10)
-            axs[1, 1].set_xlabel('Car Make', fontsize=8)
-            axs[1, 1].set_ylabel('Highest Car Price (AED)', fontsize=8)
-            axs[1, 1].tick_params(axis='x', rotation=45)
-            for i, v in enumerate(top_10_highest_price.values):
-                axs[1, 1].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='red')
+        # ................................................................4 - Bar Chart (Top 10 Car Makes by Highest Price)
+        highest_price_by_make = df.groupby('Make')['Price'].max().sort_values(ascending=False)
+        top_10_highest_price = highest_price_by_make.head(10)
+        formatted_prices = top_10_highest_price.apply(lambda x: f'{x/1_000_000:.2f}M' if x >= 1_000_000 else str(x))
+        axs[1, 1].bar(formatted_prices.index, top_10_highest_price.values, color=sns.color_palette("pastel")[2])
+        axs[1, 1].set_title('Top 10 Car Makes by Highest Car Price', fontsize=10)
+        axs[1, 1].set_xlabel('Car Make', fontsize=8)
+        axs[1, 1].set_ylabel('Highest Car Price (AED)', fontsize=8)
+        axs[1, 1].tick_params(axis='x', rotation=45)
+        for i, v in enumerate(top_10_highest_price.values):
+            axs[1, 1].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='red')
 
-            # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
-            plt.tight_layout()
+        # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
+        plt.tight_layout()
 
-            # عرض الرسم البياني باستخدام Streamlit
-            st.pyplot(fig)
+        # عرض الرسم البياني باستخدام Streamlit
+        st.pyplot(fig)
 
-            # -------------------------- Second Figure (3x1 Grid for 3 additional plots)
+        # -------------------------- Second Figure (3x1 Grid for 3 additional plots)
 
-            # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
-            fig, axs = plt.subplots(2, 2, figsize=(8, 8))  # 2 صفوف و 2 أعمدة
+        # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
+        fig, axs = plt.subplots(2, 2, figsize=(8, 8))  # 2 صفوف و 2 أعمدة
 
-            # ................................................................5 - Bar Chart (Top 10 Car Models by Highest Price)
-            highest_price_by_model = df.groupby('Model')['Price'].max().sort_values(ascending=False)
-            top_10_highest_price_models = highest_price_by_model.head(10)
-            formatted_prices_models = top_10_highest_price_models.apply(lambda x: f'{x/1_000_000:.2f}M' if x >= 1_000_000 else str(x))
-            axs[0, 0].bar(formatted_prices_models.index, top_10_highest_price_models.values, color=sns.color_palette("pastel")[4])
-            axs[0, 0].set_title('Top 10 Car Models by Highest Car Price', fontsize=10)
-            axs[0, 0].set_xlabel('Car Model', fontsize=8)
-            axs[0, 0].set_ylabel('Highest Car Price (AED)', fontsize=8)
-            axs[0, 0].tick_params(axis='x', rotation=45)
-            for i, v in enumerate(top_10_highest_price_models.values):
-                axs[0, 0].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='red')
+        # ................................................................5 - Bar Chart (Top 10 Car Models by Highest Price)
+        highest_price_by_model = df.groupby('Model')['Price'].max().sort_values(ascending=False)
+        top_10_highest_price_models = highest_price_by_model.head(10)
+        formatted_prices_models = top_10_highest_price_models.apply(lambda x: f'{x/1_000_000:.2f}M' if x >= 1_000_000 else str(x))
+        axs[0, 0].bar(formatted_prices_models.index, top_10_highest_price_models.values, color=sns.color_palette("pastel")[4])
+        axs[0, 0].set_title('Top 10 Car Models by Highest Car Price', fontsize=10)
+        axs[0, 0].set_xlabel('Car Model', fontsize=8)
+        axs[0, 0].set_ylabel('Highest Car Price (AED)', fontsize=8)
+        axs[0, 0].tick_params(axis='x', rotation=45)
+        for i, v in enumerate(top_10_highest_price_models.values):
+            axs[0, 0].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='red')
 
-            # ................................................................6 - Pie Chart (Car Transmission Type Distribution)
-            transmission_count = df['Transmission'].value_counts()
-            axs[0, 1].pie(transmission_count.values, labels=transmission_count.index, autopct='%1.1f%%', 
-                        startangle=90, colors=sns.color_palette("pastel", len(transmission_count)), explode=[0, 0.1])
-            axs[0, 1].set_title('Car Transmission Type Distribution', fontsize=10)
+        # ................................................................6 - Pie Chart (Car Transmission Type Distribution)
+        transmission_count = df['Transmission'].value_counts()
+        axs[0, 1].pie(transmission_count.values, labels=transmission_count.index, autopct='%1.1f%%', 
+                    startangle=90, colors=sns.color_palette("pastel", len(transmission_count)), explode=[0, 0.1])
+        axs[0, 1].set_title('Car Transmission Type Distribution', fontsize=10)
 
-            # ................................................................7 - Horizontal Bar Chart (Top 10 Car Makes by Number of Cars)
-            car_count_by_make = df['Make'].value_counts().sort_values(ascending=False)
-            top_10_car_count = car_count_by_make.head(10)
-            axs[1, 0].barh(top_10_car_count.index, top_10_car_count.values, color=sns.color_palette("pastel")[3])
-            axs[1, 0].set_title('Top 10 Car Makes by Number of Cars', fontsize=10)
-            axs[1, 0].set_xlabel('Number of Cars', fontsize=8)
-            axs[1, 0].set_ylabel('Car Make', fontsize=8)
-            for i, v in enumerate(top_10_car_count.values):
-                axs[1, 0].text(v + 5, i, str(v), va='center', fontsize=6, color='red')
-            axs[1, 0].invert_yaxis()
+        # ................................................................7 - Horizontal Bar Chart (Top 10 Car Makes by Number of Cars)
+        car_count_by_make = df['Make'].value_counts().sort_values(ascending=False)
+        top_10_car_count = car_count_by_make.head(10)
+        axs[1, 0].barh(top_10_car_count.index, top_10_car_count.values, color=sns.color_palette("pastel")[3])
+        axs[1, 0].set_title('Top 10 Car Makes by Number of Cars', fontsize=10)
+        axs[1, 0].set_xlabel('Number of Cars', fontsize=8)
+        axs[1, 0].set_ylabel('Car Make', fontsize=8)
+        for i, v in enumerate(top_10_car_count.values):
+            axs[1, 0].text(v + 5, i, str(v), va='center', fontsize=6, color='red')
+        axs[1, 0].invert_yaxis()
 
-            # ................................................................8 - Line Plot (Top 9 Color Distribution by Total Number of Cars)
-            color_count = df['Color'].value_counts().head(9)
-            axs[1, 1].plot(color_count.index, color_count.values, marker='o', color=sns.color_palette("pastel")[5], linestyle='-', linewidth=2)
-            axs[1, 1].set_title('Top 9 Color Distribution by Total Number of Cars', fontsize=10)
-            axs[1, 1].set_xlabel('Color', fontsize=8)
-            axs[1, 1].set_ylabel('Number of Cars', fontsize=8)
-            axs[1, 1].grid(True)
+        # ................................................................8 - Line Plot (Top 9 Color Distribution by Total Number of Cars)
+        color_count = df['Color'].value_counts().head(9)
+        axs[1, 1].plot(color_count.index, color_count.values, marker='o', color=sns.color_palette("pastel")[5], linestyle='-', linewidth=2)
+        axs[1, 1].set_title('Top 9 Color Distribution by Total Number of Cars', fontsize=10)
+        axs[1, 1].set_xlabel('Color', fontsize=8)
+        axs[1, 1].set_ylabel('Number of Cars', fontsize=8)
+        axs[1, 1].grid(True)
 
-            # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
-            plt.tight_layout()
+        # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
+        plt.tight_layout()
 
-            # عرض الرسم البياني باستخدام Streamlit
-            st.pyplot(fig)
+        # عرض الرسم البياني باستخدام Streamlit
+        st.pyplot(fig)
 
-            # إنشاء الشكل مع تحديد عدد الصفوف والأعمدة (1 صف و 2 عمود)
-            fig, axs = plt.subplots(1, 2, figsize=(16, 8))
+        # إنشاء الشكل مع تحديد عدد الصفوف والأعمدة (1 صف و 2 عمود)
+        fig, axs = plt.subplots(1, 2, figsize=(16, 8))
 
-            # ................................................................9 - Linear Regression Model for Car Count Prediction
-            # حساب عدد السيارات حسب السنة
-            car_count_by_year = df['Year'].value_counts().sort_index()
+        # ................................................................9 - Linear Regression Model for Car Count Prediction
+        # حساب عدد السيارات حسب السنة
+        car_count_by_year = df['Year'].value_counts().sort_index()
 
-            # تحويل البيانات إلى تنسيق مناسب
-            years = car_count_by_year.index.values.reshape(-1, 1)  # السنوات
-            car_count = car_count_by_year.values  # عدد السيارات
+        # تحويل البيانات إلى تنسيق مناسب
+        years = car_count_by_year.index.values.reshape(-1, 1)  # السنوات
+        car_count = car_count_by_year.values  # عدد السيارات
 
-            # إنشاء نموذج الانحدار الخطي
-            model = LinearRegression()
+        # إنشاء نموذج الانحدار الخطي
+        model = LinearRegression()
 
-            # تدريب النموذج على البيانات
-            model.fit(years, car_count)
+        # تدريب النموذج على البيانات
+        model.fit(years, car_count)
 
-            # التنبؤ بالعدد للسنوات القادمة (مثل السنوات القادمة من 2026 إلى 2030)
-            future_years = np.array([2026, 2027, 2028, 2029, 2030]).reshape(-1, 1)
-            predicted_car_count = model.predict(future_years)
+        # التنبؤ بالعدد للسنوات القادمة (مثل السنوات القادمة من 2026 إلى 2030)
+        future_years = np.array([2026, 2027, 2028, 2029, 2030]).reshape(-1, 1)
+        predicted_car_count = model.predict(future_years)
 
-            # رسم البيانات
-            axs[0].scatter(years, car_count, color='blue', label='Actual Data')
+        # رسم البيانات
+        axs[0].scatter(years, car_count, color='blue', label='Actual Data')
 
-            # رسم التنبؤات
-            axs[0].plot(future_years, predicted_car_count, color='red', label='Predicted Data')
+        # رسم التنبؤات
+        axs[0].plot(future_years, predicted_car_count, color='red', label='Predicted Data')
 
-            # إضافة الأرقام فوق التنبؤات
-            for i, v in enumerate(predicted_car_count):
-                axs[0].text(future_years[i], v, str(int(v)), color='red', ha='center', fontsize=10)
+        # إضافة الأرقام فوق التنبؤات
+        for i, v in enumerate(predicted_car_count):
+            axs[0].text(future_years[i], v, str(int(v)), color='red', ha='center', fontsize=10)
 
-            # إضافة العنوان والتسميات
-            axs[0].set_title('Car Count Prediction for Next Years', fontsize=16)
-            axs[0].set_xlabel('Year', fontsize=12)
-            axs[0].set_ylabel('Number of Cars', fontsize=12)
+        # إضافة العنوان والتسميات
+        axs[0].set_title('Car Count Prediction for Next Years', fontsize=16)
+        axs[0].set_xlabel('Year', fontsize=12)
+        axs[0].set_ylabel('Number of Cars', fontsize=12)
 
-            # ................................................................10 - Total Car Prices and Future Predictions
-            # حساب إجمالي الأسعار لكل سنة (جميع البيانات هي 2025 فقط)
-            price_2025 = df['Price'].sum()  # جمع جميع الأسعار في 2025
+        # ................................................................10 - Total Car Prices and Future Predictions
+        # حساب إجمالي الأسعار لكل سنة (جميع البيانات هي 2025 فقط)
+        price_2025 = df['Price'].sum()  # جمع جميع الأسعار في 2025
 
-            # نفترض زيادة ثابتة في الأسعار للسنوات القادمة (افتراضات فقط)
-            increase_percentage = 0.05  # نفترض زيادة بنسبة 5% كل سنة
+        # نفترض زيادة ثابتة في الأسعار للسنوات القادمة (افتراضات فقط)
+        increase_percentage = 0.05  # نفترض زيادة بنسبة 5% كل سنة
 
-            # السنوات المستقبلية (2026-2030)
-            years_future = np.array([2026, 2027, 2028, 2029, 2030])
+        # السنوات المستقبلية (2026-2030)
+        years_future = np.array([2026, 2027, 2028, 2029, 2030])
 
-            # حساب التنبؤات المستقبلية بناءً على الافتراضات (زيادة ثابتة)
-            predicted_price = [price_2025 * ((1 + increase_percentage) ** (year - 2025)) for year in years_future]
+        # حساب التنبؤات المستقبلية بناءً على الافتراضات (زيادة ثابتة)
+        predicted_price = [price_2025 * ((1 + increase_percentage) ** (year - 2025)) for year in years_future]
 
-            # دالة لتحويل الأرقام إلى ملايين أو مليارات
-            def format_price(price):
-                if price >= 1_000_000_000:
-                    return f"{price / 1_000_000_000:.2f}B"  # تحويل للأرقام الكبيرة (بمليار)
-                elif price >= 1_000_000:
-                    return f"{price / 1_000_000:.2f}M"  # تحويل للأرقام (بمليون)
-                else:
-                    return f"{price:.2f}"  # لأرقام صغيرة
+        # دالة لتحويل الأرقام إلى ملايين أو مليارات
+        def format_price(price):
+            if price >= 1_000_000_000:
+                return f"{price / 1_000_000_000:.2f}B"  # تحويل للأرقام الكبيرة (بمليار)
+            elif price >= 1_000_000:
+                return f"{price / 1_000_000:.2f}M"  # تحويل للأرقام (بمليون)
+            else:
+                return f"{price:.2f}"  # لأرقام صغيرة
 
-            # رسم البيانات لعام 2025 باستخدام عمود (bar)
-            axs[1].bar(2025, price_2025, color='blue', width=0.3, label='Total Price in 2025')
+        # رسم البيانات لعام 2025 باستخدام عمود (bar)
+        axs[1].bar(2025, price_2025, color='blue', width=0.3, label='Total Price in 2025')
 
-            # إضافة الرقم فوق العمود
-            formatted_price_2025 = format_price(price_2025)
-            axs[1].text(2025, price_2025 + (price_2025 * 0.01), formatted_price_2025, color='blue', ha='center', fontsize=12)
+        # إضافة الرقم فوق العمود
+        formatted_price_2025 = format_price(price_2025)
+        axs[1].text(2025, price_2025 + (price_2025 * 0.01), formatted_price_2025, color='blue', ha='center', fontsize=12)
 
-            # رسم التنبؤات للسنوات القادمة باستخدام Line Plot
-            axs[1].plot(years_future, predicted_price, color='red', label='Predicted Price', linestyle='--', marker='o')
+        # رسم التنبؤات للسنوات القادمة باستخدام Line Plot
+        axs[1].plot(years_future, predicted_price, color='red', label='Predicted Price', linestyle='--', marker='o')
 
-            # إضافة الأرقام فوق التنبؤات
-            for i, v in enumerate(predicted_price):
-                formatted_price = format_price(v)  # تنسيق الرقم
-                axs[1].text(years_future[i], v + (v * 0.01), formatted_price, color='red', ha='center', fontsize=10)
+        # إضافة الأرقام فوق التنبؤات
+        for i, v in enumerate(predicted_price):
+            formatted_price = format_price(v)  # تنسيق الرقم
+            axs[1].text(years_future[i], v + (v * 0.01), formatted_price, color='red', ha='center', fontsize=10)
 
-            # إضافة العنوان والتسميات
-            axs[1].set_title('Car Price Prediction for Next Years', fontsize=16)
-            axs[1].set_xlabel('Year', fontsize=12)
-            axs[1].set_ylabel('Price (AED)', fontsize=12)
+        # إضافة العنوان والتسميات
+        axs[1].set_title('Car Price Prediction for Next Years', fontsize=16)
+        axs[1].set_xlabel('Year', fontsize=12)
+        axs[1].set_ylabel('Price (AED)', fontsize=12)
 
-            # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
-            plt.tight_layout()
+        # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
+        plt.tight_layout()
 
-            # عرض الرسم البياني باستخدام Streamlit
-            st.pyplot(fig)
+        # عرض الرسم البياني باستخدام Streamlit
+        st.pyplot(fig)
 
-        else:
-            st.error("حدث خطأ في تحميل الملف من GitHub.")
     except Exception as e:
         st.error(f"حدث خطأ أثناء قراءة الملف: {str(e)}")
+
