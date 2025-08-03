@@ -103,8 +103,17 @@ try:
 
     # ................................................................6 - Pie Chart (Car Transmission Type Distribution)
     transmission_count = df['Transmission'].value_counts()
-    axs[0, 1].pie(transmission_count.values, labels=transmission_count.index, autopct='%1.1f%%', 
-                startangle=90, colors=sns.color_palette("pastel", len(transmission_count)), explode=[0, 0.1])
+    custom_colors = ['#2A9D8F', '#D2B48C']
+
+    axs[0, 1].pie(
+        transmission_count.values,
+        labels=transmission_count.index,
+        autopct='%1.1f%%',
+        startangle=90,
+        colors=custom_colors,
+        explode=[0, 0.1]
+    )
+
     axs[0, 1].set_title('Car Transmission Type Distribution', fontsize=10)
 
     # ................................................................7 - Horizontal Bar Chart (Top 10 Car Makes by Number of Cars)
