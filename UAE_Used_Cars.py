@@ -18,7 +18,7 @@ axs[0, 0].set_title('Number of Cars in Each City', fontsize=10)
 axs[0, 0].set_xlabel('Number of Cars', fontsize=8)
 axs[0, 0].set_ylabel('City', fontsize=8)
 for i, v in enumerate(city_car_count.values):
-    axs[0, 0].text(v + 5, i, str(v), va='center', fontsize=8, color='red')
+    axs[0, 0].text(v + 5, i, str(v), va='center', fontsize=6.5, color='red')
 axs[0, 0].invert_yaxis()
 
 # ................................................................2 - Pie Chart (Fuel Type Distribution)
@@ -95,7 +95,7 @@ axs[1, 0].set_title('Top 10 Car Makes by Number of Cars', fontsize=10)
 axs[1, 0].set_xlabel('Number of Cars', fontsize=8)
 axs[1, 0].set_ylabel('Car Make', fontsize=8)
 for i, v in enumerate(top_10_car_count.values):
-    axs[1, 0].text(v + 5, i, str(v), va='center', fontsize=8, color='red')
+    axs[1, 0].text(v + 5, i, str(v), va='center', fontsize=6, color='red')
 axs[1, 0].invert_yaxis()
 
 # ................................................................8 - Line Plot (Top 9 Color Distribution by Total Number of Cars)
