@@ -30,18 +30,18 @@ try:
     axs[0, 0].invert_yaxis()
     # ................................................................2 - Pie Chart (Fuel Type Distribution)
     labels_order = ['Electric', 'Diesel', 'Hybrid', 'Gasoline']
-    fuel_type_ordered = df['Fuel Type'].value_counts()[labels_order]
-    explode_values = [0, 0, 0, 0]
-    fuel_colors = {
-        'Electric': '#00BFFF',  
-        'Diesel': '#808080',    
-        'Hybrid': '#32CD32',    
-        'Gasoline': '#FF6347'   
-    }
-    custom_colors = [fuel_colors[label] for label in labels_order]
-    axs[0, 1].pie(fuel_type_ordered.values, labels=fuel_type_ordered.index, autopct='%1.1f%%', 
-                startangle=170, colors=custom_colors, explode=explode_values)
-    axs[0, 1].set_title('Fuel Type Distribution', fontsize=10)
+fuel_type_ordered = df['Fuel Type'].value_counts()[labels_order]
+explode_values = [0, 0, 0, 0]
+fuel_colors = {
+    'Electric': '#00BFFF',
+    'Diesel': "#E6D447",
+    'Hybrid': '#32CD32',
+    'Gasoline': "#BE786A"
+}
+custom_colors = [fuel_colors[label] for label in labels_order]
+axs[0, 1].pie(fuel_type_ordered.values, labels=fuel_type_ordered.index, autopct='%1.1f%%', 
+              startangle=170, colors=custom_colors, explode=explode_values)
+axs[0, 1].set_title('Fuel Type Distribution', fontsize=10)
 
     # ................................................................3 - Line Plot (Number of Cars by Year)
     car_count_by_year = df['Year'].value_counts().sort_index()
