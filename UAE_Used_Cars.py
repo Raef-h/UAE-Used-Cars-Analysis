@@ -10,7 +10,7 @@ try:
     df = pd.read_csv("UAE Used Cars Analysis.csv")
 
     # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
-    fig, axs = plt.subplots(2, 2, figsize=(10, 10))  # 2 صفوف و 2 أعمدة (أربعة subplots)
+    fig, axs = plt.subplots(2, 2, figsize=(11, 11))  # 2 صفوف و 2 أعمدة (أربعة subplots)
 
     # ................................................................1 - Histogram (Price Distribution)
     city_car_count = df['Location'].value_counts().sort_values(ascending=False)
