@@ -166,33 +166,29 @@ try:
     # ................................................................9 - Linear Regression Model for Car Count Prediction
     
     car_count_by_year = df['Year'].value_counts().sort_index()
+    years = car_count_by_year.index.values.reshape(-1, 1)
+    car_count = car_count_by_year.values
 
-   
-    years = car_count_by_year.index.values.reshape(-1, 1)  
-    car_count = car_count_by_year.values  
-
-    
     model = LinearRegression()
-
-  
     model.fit(years, car_count)
 
-   
     future_years = np.array([2026, 2027, 2028, 2029, 2030]).reshape(-1, 1)
     predicted_car_count = model.predict(future_years)
 
-    
-    axs[0].scatter(years, car_count, color='blue', label='Actual Data')
+    actual_color = '#3A93E1'
+    predicted_color = '#2E7D32'
+    text_color = predicted_color
 
-  
-    axs[0].plot(future_years, predicted_car_count, color='red', label='Predicted Data')
+    axs[0].scatter(years, car_count, color=actual_color, label='Actual Data')
+    axs[0].plot(future_years, predicted_car_count, color=predicted_color, linestyle='--', marker='o', label='Predicted Data')
 
     for i, v in enumerate(predicted_car_count):
-        axs[0].text(future_years[i], v, str(int(v)), color='red', ha='center', fontsize=10)
+        axs[0].text(future_years[i], v + 5, str(int(v)), color=text_color, ha='center', fontsize=10)
 
     axs[0].set_title('Car Count Prediction for Next Years', fontsize=16)
     axs[0].set_xlabel('Year', fontsize=12)
     axs[0].set_ylabel('Number of Cars', fontsize=12)
+    axs[0].legend()
 
     # ................................................................10 - Total Car Prices and Future Predictions
     price_2025 = df['Price'].sum() 
