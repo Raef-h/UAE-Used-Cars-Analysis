@@ -191,41 +191,42 @@ try:
     axs[0].legend()
 
     # ................................................................10 - Total Car Prices and Future Predictions
-    price_2025 = df['Price'].sum() 
-
-    increase_percentage = 0.05  
-
+    price_2025 = df['Price'].sum()
+    increase_percentage = 0.05
     years_future = np.array([2026, 2027, 2028, 2029, 2030])
-
     predicted_price = [price_2025 * ((1 + increase_percentage) ** (year - 2025)) for year in years_future]
-
 
     def format_price(price):
         if price >= 1_000_000_000:
-            return f"{price / 1_000_000_000:.2f}B" 
+            return f"{price / 1_000_000_000:.2f}B"
         elif price >= 1_000_000:
-            return f"{price / 1_000_000:.2f}M"  
+            return f"{price / 1_000_000:.2f}M"
         else:
-            return f"{price:.2f}" 
+            return f"{price:.2f}"
 
-
-    axs[1].bar(2025, price_2025, color='blue', width=0.3, label='Total Price in 2025')
-
-
+    axs[1].bar(2025, price_2025, color="#3A93E1", width=0.3, label='Total Price in 2025')
     formatted_price_2025 = format_price(price_2025)
-    axs[1].text(2025, price_2025 + (price_2025 * 0.01), formatted_price_2025, color='blue', ha='center', fontsize=12)
+    axs[1].text(2025, price_2025 + (price_2025 * 0.01), formatted_price_2025, color='#3A93E1', ha='center', fontsize=12)
 
+    axs[1].plot(
+        years_future,
+        predicted_price,
+        color='#2E7D32',
+        label='Predicted Price',
+        linestyle='--',
+        marker='o',
+        markerfacecolor='#2E7D32'
+    )
 
-    axs[1].plot(years_future, predicted_price, color='red', label='Predicted Price', linestyle='--', marker='o')
+    text_color = '#2E7D32'
 
     for i, v in enumerate(predicted_price):
-        formatted_price = format_price(v) 
-        axs[1].text(years_future[i], v + (v * 0.01), formatted_price, color='red', ha='center', fontsize=10)
+        formatted_price = format_price(v)
+        axs[1].text(years_future[i], v + (v * 0.01), formatted_price, color=text_color, ha='center', fontsize=10)
 
     axs[1].set_title('Car Price Prediction for Next Years', fontsize=16)
     axs[1].set_xlabel('Year', fontsize=12)
     axs[1].set_ylabel('Price (AED)', fontsize=12)
-
     plt.tight_layout()
 
 
