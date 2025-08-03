@@ -119,12 +119,21 @@ try:
     # ................................................................7 - Horizontal Bar Chart (Top 10 Car Makes by Number of Cars)
     car_count_by_make = df['Make'].value_counts().sort_values(ascending=False)
     top_10_car_count = car_count_by_make.head(10)
-    axs[1, 0].barh(top_10_car_count.index, top_10_car_count.values, color=sns.color_palette("pastel")[3])
+    uniform_color = '#E6BE8A'
+
+    axs[1, 0].barh(
+        top_10_car_count.index,
+        top_10_car_count.values,
+        color=uniform_color
+    )
+
     axs[1, 0].set_title('Top 10 Car Makes by Number of Cars', fontsize=10)
     axs[1, 0].set_xlabel('Number of Cars', fontsize=8)
     axs[1, 0].set_ylabel('Car Make', fontsize=8)
+
     for i, v in enumerate(top_10_car_count.values):
-        axs[1, 0].text(v + 5, i, str(v), va='center', fontsize=6, color='red')
+        axs[1, 0].text(v + 5, i, str(v), va='center', fontsize=6, color='black')
+
     axs[1, 0].invert_yaxis()
 
     # ................................................................8 - Line Plot (Top 9 Color Distribution by Total Number of Cars)
