@@ -45,7 +45,8 @@ try:
 
     # ................................................................3 - Line Plot (Number of Cars by Year)
     car_count_by_year = df['Year'].value_counts().sort_index()
-    axs[1, 0].plot(car_count_by_year.index, car_count_by_year.values, marker='o', color=sns.color_palette("pastel")[1], linestyle='-', linewidth=2)
+    car_count_by_year = df['Year'].value_counts().sort_index()
+    axs[1, 0].plot(car_count_by_year.index, car_count_by_year.values, marker='o', color='#2A9D8F', linestyle='-', linewidth=2)
     axs[1, 0].set_title('Number of Cars by Year', fontsize=10)
     axs[1, 0].set_xlabel('Year', fontsize=8)
     axs[1, 0].set_ylabel('Number of Cars', fontsize=8)
