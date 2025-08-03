@@ -6,11 +6,10 @@ import seaborn as sns
 from sklearn.linear_model import LinearRegression
 
 try:
-    # رفع الملف من واجهة المستخدم
+  
     df = pd.read_csv("UAE Used Cars Analysis.csv")
 
-    # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
-    fig, axs = plt.subplots(2, 2, figsize=(12, 12))  # 2 صفوف و 2 أعمدة (أربعة subplots)
+    fig, axs = plt.subplots(2, 2, figsize=(12, 12)) 
 
     # ................................................................1 - Histogram (Price Distribution)
     city_car_count = df['Location'].value_counts().sort_values(ascending=False)
@@ -27,10 +26,10 @@ try:
     fuel_type_ordered = df['Fuel Type'].value_counts()[labels_order]
     explode_values = [0, 0, 0, 0]
     fuel_colors = {
-        'Electric': '#00BFFF',  # الأزرق الفاتح للكهرباء
-        'Diesel': '#808080',    # الرمادي الداكن للديزل
-        'Hybrid': '#32CD32',    # الأخضر الفاتح للهجين
-        'Gasoline': '#FF6347'   # الأحمر للبنزين
+        'Electric': '#00BFFF',  
+        'Diesel': '#808080',    
+        'Hybrid': '#32CD32',    
+        'Gasoline': '#FF6347'   
     }
     custom_colors = [fuel_colors[label] for label in labels_order]
     axs[0, 1].pie(fuel_type_ordered.values, labels=fuel_type_ordered.index, autopct='%1.1f%%', 
@@ -58,16 +57,13 @@ try:
     for i, v in enumerate(top_10_highest_price.values):
         axs[1, 1].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='red')
 
-    # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
     plt.tight_layout()
 
-    # عرض الرسم البياني باستخدام Streamlit
     st.pyplot(fig)
 
     # -------------------------- Second Figure (3x1 Grid for 3 additional plots)
 
-    # إنشاء الشكل الرئيسي مع تحديد عدد الأعمدة والصفوف (2 صفوف و 2 أعمدة)
-    fig, axs = plt.subplots(2, 2, figsize=(12, 12))  # 2 صفوف و 2 أعمدة
+    fig, axs = plt.subplots(2, 2, figsize=(12, 12))  
 
     # ................................................................5 - Bar Chart (Top 10 Car Models by Highest Price)
     highest_price_by_model = df.groupby('Model')['Price'].max().sort_values(ascending=False)
@@ -106,97 +102,88 @@ try:
     axs[1, 1].set_ylabel('Number of Cars', fontsize=8)
     axs[1, 1].grid(True)
 
-    # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
+    
     plt.tight_layout()
 
-    # عرض الرسم البياني باستخدام Streamlit
+
     st.pyplot(fig)
 
-    # إنشاء الشكل مع تحديد عدد الصفوف والأعمدة (1 صف و 2 عمود)
+
     fig, axs = plt.subplots(1, 2, figsize=(16, 8))
 
     # ................................................................9 - Linear Regression Model for Car Count Prediction
-    # حساب عدد السيارات حسب السنة
+    
     car_count_by_year = df['Year'].value_counts().sort_index()
 
-    # تحويل البيانات إلى تنسيق مناسب
-    years = car_count_by_year.index.values.reshape(-1, 1)  # السنوات
-    car_count = car_count_by_year.values  # عدد السيارات
+   
+    years = car_count_by_year.index.values.reshape(-1, 1)  
+    car_count = car_count_by_year.values  
 
-    # إنشاء نموذج الانحدار الخطي
+    
     model = LinearRegression()
 
-    # تدريب النموذج على البيانات
+  
     model.fit(years, car_count)
 
-    # التنبؤ بالعدد للسنوات القادمة (مثل السنوات القادمة من 2026 إلى 2030)
+   
     future_years = np.array([2026, 2027, 2028, 2029, 2030]).reshape(-1, 1)
     predicted_car_count = model.predict(future_years)
 
-    # رسم البيانات
+    
     axs[0].scatter(years, car_count, color='blue', label='Actual Data')
 
-    # رسم التنبؤات
+  
     axs[0].plot(future_years, predicted_car_count, color='red', label='Predicted Data')
 
-    # إضافة الأرقام فوق التنبؤات
     for i, v in enumerate(predicted_car_count):
         axs[0].text(future_years[i], v, str(int(v)), color='red', ha='center', fontsize=10)
 
-    # إضافة العنوان والتسميات
     axs[0].set_title('Car Count Prediction for Next Years', fontsize=16)
     axs[0].set_xlabel('Year', fontsize=12)
     axs[0].set_ylabel('Number of Cars', fontsize=12)
 
     # ................................................................10 - Total Car Prices and Future Predictions
-    # حساب إجمالي الأسعار لكل سنة (جميع البيانات هي 2025 فقط)
-    price_2025 = df['Price'].sum()  # جمع جميع الأسعار في 2025
+    price_2025 = df['Price'].sum() 
 
-    # نفترض زيادة ثابتة في الأسعار للسنوات القادمة (افتراضات فقط)
-    increase_percentage = 0.05  # نفترض زيادة بنسبة 5% كل سنة
+    increase_percentage = 0.05  
 
-    # السنوات المستقبلية (2026-2030)
     years_future = np.array([2026, 2027, 2028, 2029, 2030])
 
-    # حساب التنبؤات المستقبلية بناءً على الافتراضات (زيادة ثابتة)
     predicted_price = [price_2025 * ((1 + increase_percentage) ** (year - 2025)) for year in years_future]
 
-    # دالة لتحويل الأرقام إلى ملايين أو مليارات
+
     def format_price(price):
         if price >= 1_000_000_000:
-            return f"{price / 1_000_000_000:.2f}B"  # تحويل للأرقام الكبيرة (بمليار)
+            return f"{price / 1_000_000_000:.2f}B" 
         elif price >= 1_000_000:
-            return f"{price / 1_000_000:.2f}M"  # تحويل للأرقام (بمليون)
+            return f"{price / 1_000_000:.2f}M"  
         else:
-            return f"{price:.2f}"  # لأرقام صغيرة
+            return f"{price:.2f}" 
 
-    # رسم البيانات لعام 2025 باستخدام عمود (bar)
+
     axs[1].bar(2025, price_2025, color='blue', width=0.3, label='Total Price in 2025')
 
-    # إضافة الرقم فوق العمود
+
     formatted_price_2025 = format_price(price_2025)
     axs[1].text(2025, price_2025 + (price_2025 * 0.01), formatted_price_2025, color='blue', ha='center', fontsize=12)
 
-    # رسم التنبؤات للسنوات القادمة باستخدام Line Plot
+
     axs[1].plot(years_future, predicted_price, color='red', label='Predicted Price', linestyle='--', marker='o')
 
-    # إضافة الأرقام فوق التنبؤات
     for i, v in enumerate(predicted_price):
-        formatted_price = format_price(v)  # تنسيق الرقم
+        formatted_price = format_price(v) 
         axs[1].text(years_future[i], v + (v * 0.01), formatted_price, color='red', ha='center', fontsize=10)
 
-    # إضافة العنوان والتسميات
     axs[1].set_title('Car Price Prediction for Next Years', fontsize=16)
     axs[1].set_xlabel('Year', fontsize=12)
     axs[1].set_ylabel('Price (AED)', fontsize=12)
 
-    # تحسين التنسيق لإظهار جميع الرسومات بشكل جميل
     plt.tight_layout()
 
-    # عرض الرسم البياني باستخدام Streamlit
+
     st.pyplot(fig)
 
 except Exception as e:
-    st.error(f"حدث خطأ أثناء قراءة الملف: {str(e)}")
+    st.error(f"The error occurred while reading the file.: {str(e)}")
 
 
