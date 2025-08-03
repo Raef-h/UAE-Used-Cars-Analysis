@@ -77,7 +77,7 @@ try:
 
     st.pyplot(fig)
 
-    # -------------------------- Second Figure (3x1 Grid for 3 additional plots)
+    # -------------------------- Second Figure (2x2 Grid for 2 additional plots)
 
     fig, axs = plt.subplots(2, 2, figsize=(12, 12))  
 
@@ -85,13 +85,21 @@ try:
     highest_price_by_model = df.groupby('Model')['Price'].max().sort_values(ascending=False)
     top_10_highest_price_models = highest_price_by_model.head(10)
     formatted_prices_models = top_10_highest_price_models.apply(lambda x: f'{x/1_000_000:.2f}M' if x >= 1_000_000 else str(x))
-    axs[0, 0].bar(formatted_prices_models.index, top_10_highest_price_models.values, color=sns.color_palette("pastel")[4])
+    uniform_color = '#2A9D8F'
+
+    axs[0, 0].bar(
+        formatted_prices_models.index,
+        top_10_highest_price_models.values,
+        color=uniform_color
+    )
+
     axs[0, 0].set_title('Top 10 Car Models by Highest Car Price', fontsize=10)
     axs[0, 0].set_xlabel('Car Model', fontsize=8)
     axs[0, 0].set_ylabel('Highest Car Price (AED)', fontsize=8)
     axs[0, 0].tick_params(axis='x', rotation=45)
+
     for i, v in enumerate(top_10_highest_price_models.values):
-        axs[0, 0].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='red')
+        axs[0, 0].text(i, v + 5000, f'{v/1_000_000:.2f}M', ha='center', fontsize=8, color='black')
 
     # ................................................................6 - Pie Chart (Car Transmission Type Distribution)
     transmission_count = df['Transmission'].value_counts()
